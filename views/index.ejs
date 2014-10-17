@@ -20,7 +20,7 @@
             <% var list = detail.list; %>
             <% if (list && list.length) { %>
 
-                <% for (var i = 0; i < list.length; i ++) { %>
+                <% for (var i = 0; i < list.length; i++) { %>
                     <div class="page-item post-page-list">
                         <input class="tinput url" type="text" value="<%= list[i].sourcePage %>" placeholder="请输入微信页面地址" />
                         <div class="remote-post">
@@ -29,25 +29,76 @@
                                 <input name="pageUrl" type="hidden" value="<%= list[i].pageUrl || '' %>"/>
                                 <input name="imgSrc" type="hidden" value="<%= list[i].imgSrc || '' %>"/>
                                 <select name="in-category" class="select">
-                                    <option selected="selected" value="2">叽歪笑话</option>
-                                    <option value="11">爆笑体育</option>
-                                    <option value="12">天下趣闻</option>
-                                    <option value="13">幽默笑话</option>
-                                    <option value="14">经典笑话</option>
-                                    <option value="15">内涵笑话</option>
+                                    <%
+                                        var categorys = [
+                                                {value : "2", text: "叽歪笑话"},
+                                                {value : "11", text: "爆笑体育"},
+                                                {value : "12", text: "天下趣闻"},
+                                                {value : "13", text: "幽默笑话"},
+                                                {value : "14", text: "经典笑话"},
+                                                {value : "15", text: "内涵笑话"}
+                                        ],
+                                        incategory = list[i]["in-category"] || 2;
+                                        if( incategory ) {
+                                            categorys.forEach(function(val, index){
+                                                if( val.value == incategory ) {
+                                                    categorys[index].selected = "selected=selected";
+                                                }
+                                            });
+                                        }
+
+                                    %>
+                                    <% for (var n = 0; n < categorys.length; n++) {
+                                            var selected = "";
+                                            if( categorys[n].selected ) {
+                                                selected = categorys[n].selected;
+                                            }
+                                    %>
+                                        <option <%= selected %> value="<%= categorys[n].value %>"><%= categorys[n].text %></option>
+                                    <% } %>
                                 </select>
                                 <label class="post-label"></label>
 
                                 <select name="post-state" class="select post-state">
-                                    <% if(list[i].pageUrl) { %>
-                                        <option selected="selected" value="1">发布</option>
-                                        <option value="2">不发布</option>
-                                    <% }else{ %>
-                                        <option value="1">发布</option>
-                                        <option selected="selected" value="2">不发布</option>
+
+                                    <%
+                                        var postType = [
+                                            {value : "1", text: "发布"},
+                                            {value : "2", text: "不发布"}
+                                        ];
+
+                                        var postState = list[i]["post-state"];
+
+                                        if( !list[i]["post-state"] ){
+                                            postState = 1;
+                                        }
+
+                                        if( postState ) {
+                                            postType.forEach(function(val, index){
+                                                if( val.value == postState ) {
+                                                    postType[index].selected = "selected=selected";
+                                                }
+                                            });
+                                        }
+
+                                    %>
+
+                                    <% for (var j = 0; j < postType.length; j++) {
+                                        var selected = "";
+                                        if( postType[j].selected ) {
+                                            selected = postType[j].selected;
+                                        }
+                                    %>
+                                    <option <%= selected %> value="<%= postType[j].value %>"><%= postType[j].text %></option>
                                     <% } %>
+
                                 </select>
-                                <span class="post-state">末发布</span>
+                                <%
+                                    var postStatus = list[i]["post-status"] || "末发布",
+                                        successState = list[i]["success"] || 0;
+                                %>
+                                <input type="hidden" name="have_post" value="<%= successState %>" >
+                                <span class="post-status"><%= postStatus %></span>
                                 <span class="hide post-msg">正在发布中，请稍后</span>
                             </form>
                         </div>
@@ -81,24 +132,79 @@
                                 <input name="pageUrl" type="hidden" value="{{= list[i].pageUrl || '' }}" />
                                 <input name="imgSrc" type="hidden" value="{{= list[i].imgSrc || '' }}" />
                                 <select name="post_category" class="select">
-                                    <option selected="selected" value="2">叽歪笑话</option>
-                                    <option value="11">爆笑体育</option>
-                                    <option value="12">天下趣闻</option>
-                                    <option value="13">幽默笑话</option>
-                                    <option value="14">经典笑话</option>
-                                    <option value="15">内涵笑话</option>
+
+                                    {{
+                                        var categorys = [
+                                                    {value : "2", text: "叽歪笑话"},
+                                                    {value : "11", text: "爆笑体育"},
+                                                    {value : "12", text: "天下趣闻"},
+                                                    {value : "13", text: "幽默笑话"},
+                                                    {value : "14", text: "经典笑话"},
+                                                    {value : "15", text: "内涵笑话"}
+                                                ],
+                                                incategory = list[i]["in-category"] || 2;
+                                        if( incategory ) {
+                                            categorys.forEach(function(val, index){
+                                                if( val.value == incategory ) {
+                                                    categorys[index].selected = "selected=selected";
+                                                }
+                                            });
+                                        }
+
+                                    }}
+                                    {{ for (var n = 0; n < categorys.length; n++) {
+                                        var selected = "";
+                                        if( categorys[n].selected ) {
+                                            selected = categorys[n].selected;
+                                        }
+                                    }}
+                                    <option {{= selected }} value="{{= categorys[n].value }}">{{= categorys[n].text }}</option>
+                                    {{ } }}
+
                                 </select>
                                 <label class="post-label"></label>
                                 <select name="post-state" class="select post-state">
-                                    {{ if(list[i].pageUrl) { }}
-                                        <option selected="selected" value="1">发布</option>
-                                        <option value="2">不发布</option>
-                                    {{ }else{ }}
-                                        <option value="1">发布</option>
-                                        <option selected="selected" value="2">不发布</option>
+
+                                    {{
+                                        var postType = [
+                                            {value : "1", text: "发布"},
+                                            {value : "2", text: "不发布"}
+                                        ];
+
+                                        var postState = list[i]["post-state"];
+
+                                        if( !list[i]["post-state"] ){
+                                            postState = 1;
+                                        }
+
+                                        if( postState ) {
+                                            postType.forEach(function(val, index){
+                                                if( val.value == postState ) {
+                                                    postType[index].selected = "selected=selected";
+                                                }
+                                            });
+                                        }
+
+                                    }}
+
+                                    {{ for (var j = 0; j < postType.length; j++) {
+                                        var selected = "";
+                                        if( postType[j].selected ) {
+                                            selected = postType[j].selected;
+                                        }
+                                    }}
+                                    <option {{= selected }} value="{{= postType[j].value }}">{{= postType[j].text }}</option>
                                     {{ } }}
+
                                 </select>
-                                <span class="post-state">末发布</span>
+
+                                {{
+                                    var postStatus = list[i]["post-status"] || "末发布",
+                                    successState = list[i]["success"] || 0;
+                                }}
+                                <input type="hidden" name="have_post" value="{{= successState }}" >
+                                <span class="post-status">{{= postStatus }}</span>
+
                                 <span class="post-msg">正在发布中，请稍后</span>
                             </form>
                         </div>
@@ -109,7 +215,9 @@
 	
 	<script>
 		jQuery(function($){
-			var addItemBtn = $('#add-item-btn'), emptyItemBtn = $('#empty-item-btn'),
+			var addItemBtn = $('#add-item-btn'),
+                emptyItemBtn = $('#empty-item-btn'),
+                pageLoad = $('.page-load'),
 			pageBox = $('#page-item-box'), 
 			pageItemTemp = '<div class="page-item"><input type="text" placeholder="请输入微信页面地址" value=""></div>'; 
 			addItemBtn.click(function(){
@@ -122,7 +230,7 @@
             });
 			
 			$('#post-page-btn').on('click', function(){
-				var input = pageBox.find('input.url'), data = [], pageLoad = $('.page-load');
+				var input = pageBox.find('input.url'), data = [];
 
                 pageLoad.show(0);
                 input.each(function(){
@@ -192,27 +300,39 @@
 
 
             $('#remote-post-btn').on('click', function(){
-                 var remotePost = pageBox.find('.remote-post'), index = 0, len = remotePost.length;
-
+                 var remotePosts = pageBox.find('.remote-post'), index = 0, len = remotePosts.length;
+                pageLoad.show();
                 (function(){
+                    var arg = arguments;
                     if( index < len ) {
-                        var postForm = remotePost.eq(index).find('form'),
-                            postParam = postForm.serialize();
+                        var remotePost = remotePosts.eq(index),
+                            postForm = remotePost.find('form'),
+                            postMsg = remotePost.find('.post-msg'),
+                            postStatus = remotePost.find('.post-status'),
+                            postParam = postForm.serializeArray();
+                            postParam.push({
+                                name : "index",
+                                value : index
+                            });
 
+                        postMsg.show();
                         $.ajax({
                             url : '/remote',
                             dataType : 'json',
                             type : 'post',
-                            data : {
-                                index : index,
-                                data : postParam
-                            },
+                            data : postParam,
                             success : function( res ){
+                                postMsg.hide();
                                 if( res.success ) {
-                                     console.log( res.data );
+                                    postStatus.html( res.data.msg );
                                 }
+                                index++;
+                                arg.callee();
                             }
                         })
+                    } else {
+                        pageLoad.hide();
+                        alert('远程同步文章完成');
                     }
                 }());
             });
