@@ -30,27 +30,31 @@ casper.then(function() {
 
 
 casper.then(function() {
-    casper.evaluate(function(title, content, category) {
-        document.querySelector('#title').value = title;
-        if( typeof tinyMCE != 'undefined' ) {
-            tinyMCE.execCommand("mceInsertContent", false,  content);
-        } else {
-            document.querySelector('#content').innerHTML = content;
-        }
+	this.wait(2000, function(){
+		casper.evaluate(function(title, content, category) {
+			document.querySelector('#title').value = title;
+			if( typeof tinyMCE != 'undefined' ) {
+				tinyMCE.execCommand("mceInsertContent", false,  content);
+			} else {
+				document.querySelector('#content').innerHTML = content;
+			}
 
-        document.querySelector('#in-category-' + category).checked = true;
+			document.querySelector('#in-category-' + category).checked = true;
 
-        document.querySelector('#post-format-video').checked = true;
+			document.querySelector('#post-format-video').checked = true;
 
-        document.querySelector('#publish').click();
+			document.querySelector('#publish').click();
 
-    }, post.title, post.content, post["in-category"]);
+		}, post.title, post.content, post["in-category"]);
+	});
+	
+	this.wait(2000, function(){
+		this.echo(JSON.stringify({
+			success : true
+		})).exit();
+	});
 
 
 });
 
-casper.run(function() {
-    this.echo(JSON.stringify({
-        success : true
-    })).exit();
-});
+casper.run();

@@ -47,13 +47,13 @@ exports.post = function(req, res){
 
     resultObj.list[index]["in-category"] = category;
     resultObj.list[index]["post-state"] = postState;
-    //resultObj.list[index]["post-status"] = "发布成功";
-    //resultObj.list[index].success = 1;
+
 
     fs.writeFileSync(resultPath, JSON.stringify(resultObj) );
 
     res.set({'Content-Type':'text/plain'});
     if( postState == 1 && have_post == 0 ) {
+
         var casper = spawn('casperjs', [
             "casper/post.js"
         ], {});
@@ -62,8 +62,15 @@ exports.post = function(req, res){
             data = data.toString();
             console.log(data);
         });
+	
 
         casper.on('exit', function (code,signal) {
+		
+			resultObj.list[index]["post-status"] = "发布成功";
+			resultObj.list[index].success = 1;
+			
+			fs.writeFileSync(resultPath, JSON.stringify(resultObj) );
+
             res.send(JSON.stringify({
                 success : true,
                 data : {
@@ -74,11 +81,10 @@ exports.post = function(req, res){
 
     } else {
         res.send(JSON.stringify({
-            success : false,
-            data : {
-                msg : "发布成功"
-            }
+            success : false
         }));
     }
+	
+	fs.writeFileSync(resultPath, JSON.stringify(resultObj) );
 
 };
