@@ -329,7 +329,14 @@
                             success : function( res ){
                                 postMsg.hide();
                                 if( res.success ) {
-                                    postStatus.html( res.data.msg );
+                                    var detail = res.data.detail,
+                                        msg = res.data.msg;
+                                    $('#update-title-btn').attr('data-dir', detail.dir);
+                                    var html = template.render('page-item-template', {
+                                        detail : detail
+                                    });
+
+                                    $('#page-item-box').html( html );
                                 }
                                 index++;
                                 arg.callee();

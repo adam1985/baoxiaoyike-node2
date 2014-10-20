@@ -60,24 +60,45 @@ exports.post = function(req, res){
 
         casper.stdout.on('data', function (data) {
             data = data.toString();
-            console.log(data);
+            var resJson;
+
+            try{
+                resJson = JSON.parse( data );
+            } catch(e){
+
+            }
+
+            if( resJson ) {
+                if( resJson.success ){
+                    resultObj.list[index]["post-status"] = "发布成功";
+                    resultObj.list[index].success = 1;
+
+                    fs.writeFileSync(resultPath, JSON.stringify(resultObj) );
+
+                    res.send(JSON.stringify({
+                        success : true,
+                        data : {
+                            msg : "发布成功",
+                            detail : resultObj
+                        }
+                    }));
+
+                } else {
+                    resultObj.list[index]["post-status"] = "发布失败";
+                    resultObj.list[index].success = 0;
+
+                    fs.writeFileSync(resultPath, JSON.stringify(resultObj) );
+
+                    res.send(JSON.stringify({
+                        success : true,
+                        list : resultObj.list
+                    }));
+                }
+            }
         });
 	
 
-        casper.on('exit', function (code,signal) {
-		
-			resultObj.list[index]["post-status"] = "发布成功";
-			resultObj.list[index].success = 1;
-			
-			fs.writeFileSync(resultPath, JSON.stringify(resultObj) );
-
-            res.send(JSON.stringify({
-                success : true,
-                data : {
-                    msg : "发布成功"
-                }
-            }));
-        });
+        casper.on('exit', function (code,signal) { });
 
     } else {
         res.send(JSON.stringify({
