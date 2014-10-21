@@ -32,8 +32,8 @@ casper.start('http://www.baoxiaoyike.cn/wp-admin/post-new.php', function() {
         });
     }, function then() {
         this.fill('#loginform', {
-            'log': 'admin',
-            'pwd': 'yuan008598'
+            'log': 'lvyuan',
+            'pwd': 'zxcvbnm008598'
         }, false);
         this.click('#wp-submit');
         this.echo('正在模拟登录');

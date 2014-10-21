@@ -6,3 +6,5 @@ http://blog.csdn.net/sagomilk/article/details/20800543
 
 http://docs.casperjs.org/en/latest/modules/casper.html#zoom
 phantomjs SlimerJS casperjs
+
+http://www.tuicool.com/articles/iuMb2y

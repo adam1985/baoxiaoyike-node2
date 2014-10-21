@@ -58,9 +58,10 @@ exports.post = function(req, res){
             "casper/post.js"
         ], {});
 
+        var resJson;
+
         casper.stdout.on('data', function (data) {
             data = data.toString();
-            var resJson;
 
             try{
                 resJson = JSON.parse( data );
@@ -68,6 +69,10 @@ exports.post = function(req, res){
 
             }
 
+        });
+	
+
+        casper.on('exit', function (code,signal) {
             if( resJson ) {
                 if( resJson.success ){
                     resultObj.list[index]["post-status"] = "发布成功";
@@ -91,14 +96,14 @@ exports.post = function(req, res){
 
                     res.send(JSON.stringify({
                         success : true,
-                        list : resultObj.list
+                        data : {
+                            msg : "发布失败",
+                            detail : resultObj
+                        }
                     }));
                 }
             }
         });
-	
-
-        casper.on('exit', function (code,signal) { });
 
     } else {
         res.send(JSON.stringify({

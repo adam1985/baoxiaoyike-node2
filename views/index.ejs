@@ -116,7 +116,8 @@
 		<div class="post-page">
 			<input type="button" id="post-page-btn" value="抓取数据"  />
             <input type="button" id="update-title-btn" data-dir="<%= detail.dir %>" value="标题更新"  />
-            <input type="button" id="remote-post-btn" value="远程同步"  />
+            <input type="button" id="remote-post-btn" value="远程同步网站"  />
+            <input type="button" id="remote-post-btn" value="远程同步公众平台"  />
 		</div>
 	</div>
 
@@ -227,9 +228,9 @@
 			});
 
             emptyItemBtn.click(function(){
-				pageItem.each(function(){
+				pageItem.each(function(index){
 					var $this = $(this);
-					$this.remove();
+                    pageItem.eq(index).remove();
 					pageBox.append(pageItemTemp);
 				});
             });
